@@ -1,6 +1,7 @@
 import React from 'react'
 import MeetupList from '@/components/meetups/MeetupList'
 import { useEffect } from 'react'
+import { MongoClient } from 'mongodb'
 import { useState } from 'react'
 const DUMMY_MEETUP=[
   {
@@ -38,9 +39,20 @@ export default function HomePage(props) {
   
 }
 export async function getStaticProps(){
+
+  const client=await MongoClient.connect('mongodb+srv://priyabanait91:0cJ79iInJejO14v5@meet-up-db.dloetcx.mongodb.net/?retryWrites=true&w=majority');
+  const db=client.db();
+  const meetupCollection=db.collection('meetup');
+  const meetups= await meetupCollection.find().toArray();
+   client.close();
   return{
     props:{
-      meetup:DUMMY_MEETUP
+      meetup:meetups.map(meetup=>({
+        title:meetup.title,
+        address:meetup.address,
+        image:meetup.image,
+        id:meetup._id.toString()
+      }))
     } 
   }
    
