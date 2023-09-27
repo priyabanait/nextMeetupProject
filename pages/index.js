@@ -3,6 +3,8 @@ import MeetupList from '@/components/meetups/MeetupList'
 import { useEffect } from 'react'
 import { MongoClient } from 'mongodb'
 import { useState } from 'react'
+
+import Head from 'next/head'
 const DUMMY_MEETUP=[
   {
     id:'1',
@@ -33,7 +35,12 @@ export default function HomePage(props) {
   },[])
   return (
     <div>
+    <Head>
+    <title>React meetups</title>
+    <meta name='description' content='Brows a huge list of highly active react meetups!'></meta>
+    </Head>
       <MeetupList meetups={props.meetup}></MeetupList>
+      
     </div>
   )
   

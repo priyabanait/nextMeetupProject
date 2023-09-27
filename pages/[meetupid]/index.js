@@ -1,9 +1,14 @@
 import React from 'react'
 import { MongoClient,ObjectId } from 'mongodb'
+import Head from 'next/head';
 export default function index(props) {
   return (
     <div>
-     <img src='https://upload.wikimedia.org/wikipedia/commons/d/d3/Stadtbild_M%C3%BCnchen.jpg' alt=''></img>
+    <Head>
+    <title>{props.meetupData.title}</title>
+    <meta name='description' content={props.meetupData.description}></meta>
+    </Head>
+     <img src={props.meetupData.image} alt='' />
      <h1>{props.meetupData.title}</h1>
      <address>{props.meetupData.address}</address>
      <p>{props.meetupData.description}</p>
@@ -20,7 +25,7 @@ export async function getStaticPaths() {
   return {
     fallback: false,
     paths: meetups.map((meetup) => ({
-      params: { meetupid: meetup._id.toString() }, // Make sure the parameter name matches your dynamic route file name.
+      params: { meetupId: meetup._id.toString() }, // Make sure the parameter name matches your dynamic route file name.
     })),
   };
 }
@@ -31,11 +36,7 @@ export async function getStaticProps(context) {
   const meetupCollection = db.collection('meetup');
   const meetups = await meetupCollection.findOne({ _id: meetupId });
   client.close();
-  if (!meetups) {
-    return {
-      notFound: true, // Return a 404 page or handle the "not found" case appropriately.
-    };
-  }
+  
 
   return {
     props: {
